@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
     @Id
     private String id;
-    private String usernane;
+    private String username;
     private String password;
 
     public User() {
@@ -21,12 +21,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUsernane() {
-        return usernane;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUsernane(String usernane) {
-        this.usernane = usernane;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
