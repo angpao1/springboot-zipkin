@@ -9,27 +9,30 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
     private UserRepository userRepository;
-    private UserService2 userService2;
     private Tracer tracer;
 
-    public UserService(UserRepository userRepository, UserService2 userService2, Tracer tracer) {
+    public UserService(UserRepository userRepository, Tracer tracer) {
         this.userRepository = userRepository;
-        this.userService2 = userService2;
         this.tracer = tracer;
     }
 
     public User addUser(User user) {
-        return userRepository.save(user);
+        ScopedSpan span = tracer.startScopedSpan("Add User to Database");
+        User save = userRepository.save(user);
+        span.finish();
+        return save;
     }
 
     public Iterable<User> getAllUser() {
+        ScopedSpan span = tracer.startScopedSpan("Query All Users from Database");
         Iterable<User> users = userRepository.findAll();
+        span.finish();
         return users;
     }
 
     public User getUserOne(String id) {
         ScopedSpan span = tracer.startScopedSpan("Query User from Database");
-        User userById = userService2.getUserById(id);
+        User userById = userRepository.findById(id).orElse(null);
         span.finish();
         return userById;
     }
