@@ -7,11 +7,18 @@ import com.example.microserviceregister.services.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 @RestController
 @RequestMapping("/api/v1")
 public class UserController {
+
     private UserService userService;
     private Tracer tracer;
+    private static final Logger LOG = Logger.getLogger(UserController.class.getName());
+
     public UserController(UserService userService, Tracer tracer) {
         this.userService = userService;
         this.tracer = tracer;
@@ -21,8 +28,11 @@ public class UserController {
     @GetMapping("/users")
     public Iterable<User> getAllUsers() {
         ScopedSpan span = tracer.startScopedSpan("Call Service");
+//        LOG.info("Call Service Get User");
         Iterable<User> allUser = userService.getAllUser();
         span.finish();
+
+//        LOG.log(Level.INFO, "" + new Date(System.currentTimeMillis() + 7 * 60 * 60 * 1000));
         return allUser;
     }
 
@@ -30,8 +40,10 @@ public class UserController {
     @PostMapping("/users")
     public User addUser(@RequestBody User user) {
         ScopedSpan span = tracer.startScopedSpan("Call Service");
+//        LOG.info("Call Service Add User");
         User user1 = userService.addUser(user);
         span.finish();
+//        LOG.log(Level.INFO, "" + new Date(System.currentTimeMillis() + 7 * 60 * 60 * 1000));
         return user1;
     }
 
